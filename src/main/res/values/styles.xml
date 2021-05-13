@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Styleable Toast Style -->
+
+    <style name="AlertToast">
+        <item name="stTextBold">false</item>
+        <item name="stTextColor">@color/toast_error</item>
+        <item name="stTextSize">14dp</item>
+        <item name="stColorBackground">@color/toast_background</item>
+        <item name="stSolidBackground">true</item>
+        <item name="stStrokeWidth">3dp</item>
+        <item name="stStrokeColor">@color/toast_error</item>
+        <item name="stIconStart">@drawable/png_error</item>
+        <item name="stLength">LONG</item>
+        LONG or SHORT
+        <item name="stGravity">top</item>
+        top or center
+        <item name="stRadius">16dp</item>
+    </style>
+
+    <style name="MsgToast">
+        <item name="stTextBold">false</item>
+        <item name="stTextColor">@color/toast_message</item>
+        <item name="stTextSize">14dp</item>
+        <item name="stColorBackground">@color/toast_background</item>
+        <item name="stSolidBackground">true</item>
+        <item name="stStrokeWidth">3dp</item>
+        <item name="stStrokeColor">@color/toast_message</item>
+        <item name="stLength">LONG</item>
+        LONG or SHORT
+        <item name="stGravity">top</item>
+        top or center
+        <item name="stRadius">16dp</item>
+    </style>
+
+</resources>
