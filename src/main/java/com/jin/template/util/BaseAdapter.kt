@@ -24,28 +24,31 @@ abstract class BaseAdapter<T> : RecyclerView.Adapter<BaseAdapter<T>.BaseViewHold
 
     fun update(list: List<T>) = updateWithSingleViewType(list, defaultViewType)
 
+    fun updateWithSingleViewType(list: List<T>, viewType: Int) =
+        updateWithViewType(list.map { Pair(it, viewType) })
+
     fun updateWithViewType(list: List<Pair<T, Int>>) {
         itemList.clear()
         itemList.addAll(list)
         notifyDataSetChanged()
     }
 
-    fun updateWithSingleViewType(list: List<T>, viewType: Int) {
-        itemList.clear()
-        itemList.addAll(list.map { Pair(it, viewType) })
-        notifyDataSetChanged()
+    fun updateAddItem(item: T, type: Int = defaultViewType) {
+        itemList.add(Pair(item, type))
+        notifyItemInserted(itemCount)
+        notifyItemRangeInserted(itemCount, 1)
     }
 
-    fun updateAdd(list: List<T>, viewType: Int) {
+    fun updateAddList(list: List<T>) = updateAddListWithSingleViewType(list, defaultViewType)
+
+    fun updateAddListWithSingleViewType(list: List<T>, viewType: Int) =
+        updateAddListWithViewType(list.map { Pair(it, viewType) })
+
+    fun updateAddListWithViewType(list: List<Pair<T, Int>>) {
+        if (list.isEmpty()) return
         val s = itemList.size
-        if (list.size > s) {
-            itemList.addAll(list.subList(s, list.size).map { Pair(it, viewType) })
-            notifyItemRangeInserted(s, list.size)
-        } else {
-//            itemList.clear()
-//            itemList.addAll(list.map { Pair(it, viewType) })
-//            notifyDataSetChanged()
-        }
+        itemList.addAll(list)
+        notifyItemRangeInserted(s + 1, list.size)
     }
 
     fun clear() {
