@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="BottomSlideView">
+        <attr name="bottomSlideBackground" format="reference" />
+        <attr name="bottomSlideBgElevation" format="dimension"/>
+        <attr name="bottomSlideBar" format="reference" />
+        <attr name="bottomSlideBarHeight" format="dimension" />
+        <attr name="bottomSlideMaxHeight" format="dimension" />
+        <attr name="bottomSlideMinHeight" format="dimension" />
+        <attr name="bottomSlideAutoComplete" format="boolean" />
+        <attr name="bottomSlideDraggable" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="TopSlideView">
+        <attr name="topSlideBackground" format="reference" />
+        <attr name="topSlideBgElevation" format="dimension"/>
+        <attr name="topSlideBar" format="reference" />
+        <attr name="topSlideBarHeight" format="dimension" />
+        <attr name="topSlideMaxHeight" format="dimension" />
+        <attr name="topSlideMinHeight" format="dimension" />
+        <attr name="topSlideAutoComplete" format="boolean" />
+        <attr name="topSlideDraggable" format="boolean" />
+    </declare-styleable>
+
+</resources>
