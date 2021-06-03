@@ -35,7 +35,7 @@ class TopSlideView : FrameLayout {
         init(context, attrs)
     }
 
-    private lateinit var llBg: LinearLayout
+    private lateinit var ivBg: ImageView
     private lateinit var flBottom: FrameLayout
     private lateinit var ivBar: ImageView
     private lateinit var flContent: FrameLayout
@@ -55,7 +55,7 @@ class TopSlideView : FrameLayout {
         val view = View.inflate(context, R.layout.layout_top_slide_view, null)
         view.layoutParams = ViewGroup.LayoutParams(-1, -1) // MATCH_PARENT
 
-        llBg = view.ll_top_slide_view_bg
+        ivBg = view.iv_top_slide_view_bg
         flBottom = view.fl_top_slide_view_bottom
         ivBar = view.iv_top_slide_view_bar
         flContent = view.fl_top_slide_view_content
@@ -65,9 +65,7 @@ class TopSlideView : FrameLayout {
             val osa = context.obtainStyledAttributes(attrs, R.styleable.TopSlideView)
             try {
                 val bgResource = osa.getResourceId(R.styleable.TopSlideView_topSlideBackground, 0)
-                llBg.setBackgroundResource(bgResource)
-                val bgElevation = osa.getDimension(R.styleable.TopSlideView_topSlideBgElevation, 0f)
-                llBg.elevation = bgElevation
+                ivBg.setBackgroundResource(bgResource)
 
                 val barResource = osa.getResourceId(R.styleable.TopSlideView_topSlideBar, 0)
                 ivBar.setImageResource(barResource)
@@ -183,7 +181,7 @@ class TopSlideView : FrameLayout {
         flBottom.updateLayoutParams<LinearLayout.LayoutParams> { this.height = height }
     }
 
-    fun setBgResource(resourceId: Int) = apply { llBg.setBackgroundResource(resourceId) }
+    fun setBgResource(resourceId: Int) = apply { ivBg.setBackgroundResource(resourceId) }
     fun setBarResource(resourceId: Int) = apply { ivBar.setImageResource(resourceId) }
 
     fun setView(v: View) = apply {

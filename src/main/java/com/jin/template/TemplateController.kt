@@ -9,11 +9,13 @@ object TemplateController {
     lateinit var appContext: Context
     lateinit var defaultLanguage: String
     lateinit var offlineMsg: String
+    lateinit var fcmKey: String
 
     fun setApplication(app: Application) = apply { appContext = app.applicationContext }
     fun setDefaultLanguage(language: String) = apply { defaultLanguage = language }
     fun setOfflineMsg(msg: String) = apply { offlineMsg = msg }
     fun setOfflineMsg(@StringRes msgId: Int) = apply { offlineMsg = appContext.getString(msgId) }
+    fun setFcmKey(key: String) = apply { fcmKey = key }
     fun setDefaultFont(staticTypefaceFieldName: String, fontAssetName: String) = apply {
         val regular = Typeface.createFromAsset(appContext.assets, fontAssetName)
         try {

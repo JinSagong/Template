@@ -13,4 +13,10 @@
     <color name="BLACK">#000000</color>
     <color name="RED">#ff6961</color>
 
+    <!-- Text -->
+    <color name="text_white">#ffffff</color>
+    <color name="text_black">#222222</color>
+    <color name="text_gray">#666666</color>
+    <color name="text_gray_light">#999999</color>
+
 </resources>

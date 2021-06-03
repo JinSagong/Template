@@ -1,5 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="Template.AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/WHITE</item>
+        <item name="colorPrimaryDark">@color/WHITE</item>
+        <item name="colorAccent">@color/text_gray</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowBackground">@color/WHITE</item>
+        <item name="android:typeface">monospace</item>
+        <item name="bottomSheetDialogTheme">@style/Template.AppBottomSheetDialogTheme</item>
+    </style>
+
+    <style name="Template.AppTheme.Transition" parent="Template.AppTheme">
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
+    <style name="Template.AppBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/Template.AppModalStyle</item>
+        <item name="android:windowSoftInputMode">adjustResize</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="colorAccent">@color/text_black</item>
+    </style>
+
+    <style name="Template.AppModalStyle" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/rect_white_round_32</item>
+    </style>
+
+
     <!-- Styleable Toast Style -->
 
     <style name="AlertToast">
