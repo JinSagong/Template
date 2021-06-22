@@ -9,6 +9,7 @@ class Paging<T> private constructor(
     private val nestedScrollView: NestedScrollView? = null
 ) {
     private var adapter: BaseAdapter<T>? = null
+    private var viewType: Int = BaseAdapter.defaultViewType
     private var onLoadListener: ((Int, Int, (List<T>) -> Unit) -> Unit)? = null
     private var onLoadAfterListener: ((Int) -> Unit)? = null
 
@@ -19,6 +20,7 @@ class Paging<T> private constructor(
 
     fun setCapacity(capacity: Int = 10) = apply { this.capacity = capacity }
     fun setAdapter(adapter: BaseAdapter<T>) = apply { this.adapter = adapter }
+    fun setViewType(viewType: Int) = apply { this.viewType = viewType }
 
     fun setDoOnLoad(l: (Int, Int, (List<T>) -> Unit) -> Unit) = apply { onLoadListener = l }
     fun setDoOnLoadAfter(l: (Int) -> Unit) = apply { onLoadAfterListener = l }
@@ -43,10 +45,10 @@ class Paging<T> private constructor(
                 recyclerView?.removeOnScrollListener(recyclerViewListener)
             }
             if (it.size < capacity) {
-                if (it.isNotEmpty()) adapter?.updateAddList(it)
+                if (it.isNotEmpty()) adapter?.updateAddListWithSingleViewType(it, viewType)
                 page = -1
             } else {
-                adapter?.updateAddList(it)
+                adapter?.updateAddListWithSingleViewType(it, viewType)
                 page++
                 recyclerView?.post {
                     if (recyclerView.canScrollHorizontally(1) ||
@@ -69,10 +71,10 @@ class Paging<T> private constructor(
                 nestedScrollView?.setOnScrollChangeListener(null as NestedScrollView.OnScrollChangeListener?)
             }
             if (it.size < capacity) {
-                if (it.isNotEmpty()) adapter?.updateAddList(it)
+                if (it.isNotEmpty()) adapter?.updateAddListWithSingleViewType(it, viewType)
                 page = -1
             } else {
-                adapter?.updateAddList(it)
+                adapter?.updateAddListWithSingleViewType(it, viewType)
                 page++
                 nestedScrollView?.post {
                     if (nestedScrollView.canScrollHorizontally(1) ||
@@ -99,10 +101,11 @@ class Paging<T> private constructor(
                         pageWorking = page
                         onLoadListener?.invoke(page, capacity) {
                             if (it.size < capacity) {
-                                if (it.isNotEmpty()) adapter?.updateAddList(it)
+                                if (it.isNotEmpty())
+                                    adapter?.updateAddListWithSingleViewType(it, viewType)
                                 page = -1
                             } else {
-                                adapter?.updateAddList(it)
+                                adapter?.updateAddListWithSingleViewType(it, viewType)
                                 page++
                             }
                             recyclerView.post {
@@ -124,10 +127,11 @@ class Paging<T> private constructor(
                     pageWorking = page
                     onLoadListener?.invoke(page, capacity) {
                         if (it.size < capacity) {
-                            if (it.isNotEmpty()) adapter?.updateAddList(it)
+                            if (it.isNotEmpty())
+                                adapter?.updateAddListWithSingleViewType(it, viewType)
                             page = -1
                         } else {
-                            adapter?.updateAddList(it)
+                            adapter?.updateAddListWithSingleViewType(it, viewType)
                             page++
                         }
                         v.post { onLoadAfterListener?.invoke(adapter?.itemCount ?: 0) }
