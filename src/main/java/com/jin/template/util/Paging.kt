@@ -11,6 +11,8 @@ class Paging<T> private constructor(
     private var adapter: BaseAdapter<T>? = null
     private var viewType: Int = BaseAdapter.defaultViewType
     private var onLoadListener: ((Int, Int, (List<T>) -> Unit) -> Unit)? = null
+    private var onLoadListenerWithViewType: ((Int, Int, (List<Pair<T, Int>>) -> Unit) -> Unit)? =
+        null
     private var onLoadAfterListener: ((Int) -> Unit)? = null
 
     private var capacity = 10
@@ -23,6 +25,9 @@ class Paging<T> private constructor(
     fun setViewType(viewType: Int) = apply { this.viewType = viewType }
 
     fun setDoOnLoad(l: (Int, Int, (List<T>) -> Unit) -> Unit) = apply { onLoadListener = l }
+    fun setDoOnLoadWithViewType(l: (Int, Int, (List<Pair<T, Int>>) -> Unit) -> Unit) =
+        apply { onLoadListenerWithViewType = l }
+
     fun setDoOnLoadAfter(l: (Int) -> Unit) = apply { onLoadAfterListener = l }
 
     fun startObserve() {
@@ -62,6 +67,29 @@ class Paging<T> private constructor(
             }
             recyclerView?.post { onLoadAfterListener?.invoke(adapter?.itemCount ?: 0) }
         }
+        onLoadListenerWithViewType?.invoke(page, capacity) {
+            if (page == 1) {
+                adapter?.clear()
+                recyclerView?.removeOnScrollListener(recyclerViewListener)
+            }
+            if (it.size < capacity) {
+                if (it.isNotEmpty()) adapter?.updateAddListWithViewType(it)
+                page = -1
+            } else {
+                adapter?.updateAddListWithViewType(it)
+                page++
+                recyclerView?.post {
+                    if (recyclerView.canScrollHorizontally(1) ||
+                        recyclerView.canScrollVertically(1)
+                    ) {
+                        recyclerView.addOnScrollListener(recyclerViewListener)
+                    } else {
+                        initRecyclerView()
+                    }
+                }
+            }
+            recyclerView?.post { onLoadAfterListener?.invoke(adapter?.itemCount ?: 0) }
+        }
     }
 
     private fun initNestedScrollView() {
@@ -75,6 +103,29 @@ class Paging<T> private constructor(
                 page = -1
             } else {
                 adapter?.updateAddListWithSingleViewType(it, viewType)
+                page++
+                nestedScrollView?.post {
+                    if (nestedScrollView.canScrollHorizontally(1) ||
+                        nestedScrollView.canScrollVertically(1)
+                    ) {
+                        nestedScrollView.setOnScrollChangeListener(nestedScrollViewListener)
+                    } else {
+                        initRecyclerView()
+                    }
+                }
+            }
+            nestedScrollView?.post { onLoadAfterListener?.invoke(adapter?.itemCount ?: 0) }
+        }
+        onLoadListenerWithViewType?.invoke(page, capacity) {
+            if (page == 1) {
+                adapter?.clear()
+                nestedScrollView?.setOnScrollChangeListener(null as NestedScrollView.OnScrollChangeListener?)
+            }
+            if (it.size < capacity) {
+                if (it.isNotEmpty()) adapter?.updateAddListWithViewType(it)
+                page = -1
+            } else {
+                adapter?.updateAddListWithViewType(it)
                 page++
                 nestedScrollView?.post {
                     if (nestedScrollView.canScrollHorizontally(1) ||
@@ -112,6 +163,19 @@ class Paging<T> private constructor(
                                 onLoadAfterListener?.invoke(adapter?.itemCount ?: 0)
                             }
                         }
+                        onLoadListenerWithViewType?.invoke(page, capacity) {
+                            if (it.size < capacity) {
+                                if (it.isNotEmpty())
+                                    adapter?.updateAddListWithViewType(it)
+                                page = -1
+                            } else {
+                                adapter?.updateAddListWithViewType(it)
+                                page++
+                            }
+                            recyclerView.post {
+                                onLoadAfterListener?.invoke(adapter?.itemCount ?: 0)
+                            }
+                        }
                     }
                 }
             }
@@ -132,6 +196,17 @@ class Paging<T> private constructor(
                             page = -1
                         } else {
                             adapter?.updateAddListWithSingleViewType(it, viewType)
+                            page++
+                        }
+                        v.post { onLoadAfterListener?.invoke(adapter?.itemCount ?: 0) }
+                    }
+                    onLoadListenerWithViewType?.invoke(page, capacity) {
+                        if (it.size < capacity) {
+                            if (it.isNotEmpty())
+                                adapter?.updateAddListWithViewType(it)
+                            page = -1
+                        } else {
+                            adapter?.updateAddListWithViewType(it)
                             page++
                         }
                         v.post { onLoadAfterListener?.invoke(adapter?.itemCount ?: 0) }
