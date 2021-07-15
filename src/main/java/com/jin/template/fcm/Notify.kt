@@ -69,7 +69,6 @@ class Notify private constructor(private val context: Context, private val chann
             Notify(context, channel).delete(notificationId)
     }
 
-
     class Builder(private val context: Context) {
         private var mChannel = ""
         private var mTitle = ""
