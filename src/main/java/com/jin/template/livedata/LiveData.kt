@@ -11,6 +11,8 @@ class LiveData<T> : MutableLiveData<DataLiveValue<T>>() {
     fun postValue(value: T, observable: Boolean = true) =
         postValue(DataLiveValue(value, observable))
 
+    fun setValue(value: T, observable: Boolean = true) = setValue(DataLiveValue(value, observable))
+
     fun notifyValue(observable: Boolean = true) =
         value?.let { setValue(DataLiveValue(it.value, observable)) }
 
