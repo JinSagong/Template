@@ -15,13 +15,21 @@ object MsgBottomSheetDialog {
     private var bottomSheetDialog: BottomSheetDialog? = null
 
     fun withOneBtn(context: Context): OneBtnBSDialog {
-        bottomSheetDialog?.cancel()
+        try {
+            bottomSheetDialog?.cancel()
+        } catch (e: Exception) {
+            Debug.e(e.message.toString())
+        }
         bottomSheetDialog = OneBtnBSDialog(context)
         return bottomSheetDialog!! as OneBtnBSDialog
     }
 
     fun withTwoBtn(context: Context): TwoBtnBSDialog {
-        bottomSheetDialog?.cancel()
+        try {
+            bottomSheetDialog?.cancel()
+        } catch (e: Exception) {
+            Debug.e(e.message.toString())
+        }
         bottomSheetDialog = TwoBtnBSDialog(context)
         return bottomSheetDialog!! as TwoBtnBSDialog
     }
@@ -29,7 +37,7 @@ object MsgBottomSheetDialog {
     fun dismiss() = try {
         bottomSheetDialog?.dismiss()
     } catch (e: Exception) {
-        Debug.i(e.message.toString())
+        Debug.e(e.message.toString())
     }
 
     class OneBtnBSDialog(context: Context) : BottomSheetDialog(context) {
