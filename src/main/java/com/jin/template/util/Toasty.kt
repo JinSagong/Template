@@ -21,7 +21,11 @@ object Toasty {
         appContext, msg, Toast.LENGTH_LONG, R.style.MsgToast
     )
 
-    fun cancel() = toast?.cancel()
+    fun cancel() = try {
+        toast?.cancel()
+    } catch (e: Exception) {
+        Debug.e("Toasty error: ${e.message}")
+    }
 
     fun showAlert(@StringRes msgId: Int) {
         val msg = appContext.createConfigurationContext(
