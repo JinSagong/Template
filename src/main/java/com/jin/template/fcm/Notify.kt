@@ -5,6 +5,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
@@ -27,6 +28,7 @@ class Notify private constructor(private val context: Context, private val chann
         notificationBuilder.priority =
             if (high) NotificationCompat.PRIORITY_HIGH else NotificationCompat.PRIORITY_LOW
     }
+
     fun setCancellable(cancellable: Boolean) = apply {
         notificationBuilder
             .setAutoCancel(cancellable)
@@ -76,6 +78,7 @@ class Notify private constructor(private val context: Context, private val chann
         private var mIcon = 0
         private var mColor = 0
         private var mClickIntent: Intent? = null
+        private var mSoundUri: Uri? = null
 
         fun setChannel(channel: String) = apply { mChannel = channel }
         fun setTitle(title: String) = apply { mTitle = title }
@@ -90,6 +93,10 @@ class Notify private constructor(private val context: Context, private val chann
                 mClickIntent = Intent(context, activity).apply(configIntent)
             }
 
+        // Uri.parse("android.resource://${context.applicationContext.packageName}/${R.raw.~}")
+        fun setSound(uri: String) = apply { mSoundUri = Uri.parse(uri) }
+        fun setSound(uri: Uri) = apply { mSoundUri = uri }
+
         fun build() {
             if (mChannel.isEmpty() || mTitle.isEmpty() || mContent.isEmpty()) return
             Notify.with(context)
@@ -102,6 +109,8 @@ class Notify private constructor(private val context: Context, private val chann
                     channelName = mChannel
                     channelDescription = mChannel
                     vibrationPattern = listOf(100, 200, 100, 200)
+
+                    if (mSoundUri != null) sound = mSoundUri!!
                 }
                 .header {
                     if (mIcon != 0) icon = mIcon
