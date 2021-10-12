@@ -9,6 +9,7 @@ import android.net.Uri
 import android.os.Build
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
+import androidx.annotation.RawRes
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import io.karn.notify.Notify
@@ -93,9 +94,12 @@ class Notify private constructor(private val context: Context, private val chann
                 mClickIntent = Intent(context, activity).apply(configIntent)
             }
 
-        // Uri.parse("android.resource://${context.applicationContext.packageName}/${R.raw.~}")
         fun setSound(uri: String) = apply { mSoundUri = Uri.parse(uri) }
         fun setSound(uri: Uri) = apply { mSoundUri = uri }
+        fun setSound(@RawRes sound: Int) = apply {
+            mSoundUri =
+                Uri.parse("android.resource://${context.applicationContext.packageName}/$sound")
+        }
 
         fun build() {
             if (mChannel.isEmpty() || mTitle.isEmpty() || mContent.isEmpty()) return
