@@ -11,6 +11,7 @@ import android.view.WindowManager
 import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.updateLayoutParams
+import androidx.fragment.app.Fragment
 
 @Suppress("UNUSED")
 object StatusBar {
@@ -42,14 +43,31 @@ object StatusBar {
     }
 
     fun setHeightOfStatusBar(act: Activity, statusBar: View) {
-        statusBar.viewTreeObserver.addOnGlobalLayoutListener(object :
-            ViewTreeObserver.OnGlobalLayoutListener {
-            override fun onGlobalLayout() {
+        statusBar.viewTreeObserver.addOnPreDrawListener(object :
+            ViewTreeObserver.OnPreDrawListener {
+            override fun onPreDraw(): Boolean {
                 val rect = Rect()
                 act.window.decorView.getWindowVisibleDisplayFrame(rect)
                 val height = if (rect.top > 200) 0 else rect.top
                 statusBar.updateLayoutParams<LinearLayout.LayoutParams> { this.height = height }
-                statusBar.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                statusBar.viewTreeObserver.removeOnPreDrawListener(this)
+                return true
+            }
+        })
+    }
+
+    fun setHeightOfStatusBar(fragment: Fragment, statusBar: View) {
+        fragment.postponeEnterTransition()
+        statusBar.viewTreeObserver.addOnPreDrawListener(object :
+            ViewTreeObserver.OnPreDrawListener {
+            override fun onPreDraw(): Boolean {
+                val rect = Rect()
+                fragment.requireActivity().window.decorView.getWindowVisibleDisplayFrame(rect)
+                val height = if (rect.top > 200) 0 else rect.top
+                statusBar.updateLayoutParams<LinearLayout.LayoutParams> { this.height = height }
+                fragment.startPostponedEnterTransition()
+                statusBar.viewTreeObserver.removeOnPreDrawListener(this)
+                return true
             }
         })
     }
