@@ -3,7 +3,9 @@ package com.jin.template.util
 import android.view.View
 import androidx.annotation.AnimRes
 import androidx.annotation.AnimatorRes
+import androidx.annotation.ColorRes
 import androidx.annotation.IdRes
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.transition.TransitionInflater
@@ -21,6 +23,11 @@ class FragmentUtil(private val fa: FragmentActivity) {
     private val sharedAnimationList: Queue<Pair<View, String>> = LinkedList()
 
     fun setContainerId(@IdRes containerId: Int) = apply { this.containerId = containerId }
+
+    fun setBackgroundColor(
+        @ColorRes colorId: Int,
+        view: View = fa.findViewById(R.id.cl_template_background)
+    ) = apply { view.setBackgroundColor(ContextCompat.getColor(fa, colorId)) }
 
     fun setHasBackStack(hasBackStack: Boolean) = apply { this.hasBackStack = hasBackStack }
 
@@ -91,6 +98,10 @@ class FragmentUtil(private val fa: FragmentActivity) {
     enum class ANIMATION(@AnimRes val animRes: Int) {
         FADE_IN(R.anim.fade_in),
         FADE_OUT(R.anim.fade_out),
+        FADE_IN_START(R.anim.fade_in_start),
+        FADE_OUT_START(R.anim.fade_out_start),
+        FADE_IN_TOP(R.anim.fade_in_top),
+        FADE_OUT_TOP(R.anim.fade_out_top),
         SLIDE_IN_END(R.anim.slide_in_end),
         SLIDE_OUT_END(R.anim.slide_out_end),
         SLIDE_IN_BOTTOM(R.anim.slide_in_bottom),

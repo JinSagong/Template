@@ -56,8 +56,12 @@ object StatusBar {
         })
     }
 
-    fun setHeightOfStatusBar(fragment: Fragment, statusBar: View) {
-        fragment.postponeEnterTransition()
+    fun setHeightOfStatusBar(
+        fragment: Fragment,
+        statusBar: View,
+        postponeAnimation: Boolean = false
+    ) {
+        if (postponeAnimation) fragment.postponeEnterTransition()
         statusBar.viewTreeObserver.addOnPreDrawListener(object :
             ViewTreeObserver.OnPreDrawListener {
             override fun onPreDraw(): Boolean {
@@ -65,7 +69,7 @@ object StatusBar {
                 fragment.requireActivity().window.decorView.getWindowVisibleDisplayFrame(rect)
                 val height = if (rect.top > 200) 0 else rect.top
                 statusBar.updateLayoutParams<LinearLayout.LayoutParams> { this.height = height }
-                fragment.startPostponedEnterTransition()
+                if (postponeAnimation) fragment.startPostponedEnterTransition()
                 statusBar.viewTreeObserver.removeOnPreDrawListener(this)
                 return true
             }
