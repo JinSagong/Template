@@ -1,6 +1,7 @@
 package com.jin.template.util.fragment
 
 import android.view.View
+import androidx.activity.OnBackPressedCallback
 import androidx.annotation.AnimRes
 import androidx.annotation.AnimatorRes
 import androidx.annotation.ColorRes
@@ -58,7 +59,12 @@ class FragmentUtil(private val fa: FragmentActivity) {
     fun addSharedElement(view: View, name: String) =
         apply { sharedAnimationList.add(Pair(view, name)) }
 
-    fun addFragment(fragment: Fragment, currentFragment: Fragment? = null) {
+    fun addFragment(
+        fragment: Fragment,
+        tag: String = fragment::class.java.simpleName,
+        singletonMode: Boolean = false,
+        currentFragment: Fragment? = null
+    ) {
         val transaction = fa.supportFragmentManager.beginTransaction()
         transaction.setReorderingAllowed(true)
 
@@ -77,7 +83,9 @@ class FragmentUtil(private val fa: FragmentActivity) {
                 TransitionInflater.from(fa).inflateTransition(android.R.transition.move)
         }
 
-        transaction.add(containerId, fragment)
+        val mFragment = fa.supportFragmentManager.findFragmentByTag(tag)
+        if (singletonMode && mFragment != null) transaction.attach(mFragment)
+        else transaction.add(containerId, fragment, if (singletonMode) tag else null)
         if (currentFragment != null) transaction.hide(currentFragment)
         if (hasBackStack) transaction.addToBackStack(null)
         transaction.commit()
@@ -91,8 +99,24 @@ class FragmentUtil(private val fa: FragmentActivity) {
         sharedAnimationList.clear()
     }
 
+    // TODO
     fun onBackPress() {
         fa.supportFragmentManager.popBackStack()
+    }
+
+    // TODO
+    fun getCurrentFragment(): Fragment? {
+        fa.supportFragmentManager.fragments.forEach { if (it.isVisible) return it }
+        return null
+    }
+
+    // TODO
+    fun onBackPressed() {
+        fa.onBackPressedDispatcher.addCallback(fa, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+
+            }
+        })
     }
 
     enum class ANIMATION(@AnimRes val animRes: Int) {
