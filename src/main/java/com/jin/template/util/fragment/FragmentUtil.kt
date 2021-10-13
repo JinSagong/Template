@@ -1,4 +1,4 @@
-package com.jin.template.util
+package com.jin.template.util.fragment
 
 import android.view.View
 import androidx.annotation.AnimRes
