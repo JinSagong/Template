@@ -113,7 +113,6 @@ class Notify private constructor(private val context: Context, private val chann
                     channelName = mChannel
                     channelDescription = mChannel
                     vibrationPattern = listOf(100, 200, 100, 200)
-
                     if (mSoundUri != null) sound = mSoundUri!!
                 }
                 .header {

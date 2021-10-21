@@ -8,6 +8,7 @@ import androidx.annotation.IdRes
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
 import androidx.transition.*
 import com.jin.template.R
 import java.util.*
@@ -78,6 +79,7 @@ class FragmentTransitionUtil(private val fa: FragmentActivity) {
                     ?.also { transaction.addSharedElement(it.first, it.second) }
             } while (pop != null)
             val transitionSet = TransitionSet().apply {
+                addTransition(AutoTransition())
                 addTransition(ChangeImageTransform())
                 addTransition(ChangeBounds())
                 addTransition(ChangeTransform())
@@ -89,11 +91,12 @@ class FragmentTransitionUtil(private val fa: FragmentActivity) {
             fragment.sharedElementReturnTransition = transitionSet
         }
 
-        val mFragment = fa.supportFragmentManager.findFragmentByTag(tag)
-        if (singletonMode && mFragment != null) transaction.attach(mFragment)
-        else transaction.add(containerId, fragment, if (singletonMode) tag else null)
+//        val mFragment = fa.supportFragmentManager.findFragmentByTag(tag)
+//        if (singletonMode && mFragment != null) transaction.detach(mFragment)
+//        transaction.add(containerId, fragment, if (singletonMode) tag else null)
+        transaction.add(containerId, fragment)
         if (currentFragment != null) transaction.hide(currentFragment)
-        if (hasBackStack) transaction.addToBackStack(null)
+        if (hasBackStack) transaction.addToBackStack(tag)
         transaction.commit()
     }
 
@@ -103,6 +106,21 @@ class FragmentTransitionUtil(private val fa: FragmentActivity) {
         popEnterAnimation = 0
         popExitAnimation = 0
         sharedAnimationList.clear()
+    }
+
+    fun checkBackStack(name: String): Boolean {
+        (0 until fa.supportFragmentManager.backStackEntryCount).forEach {
+            if (fa.supportFragmentManager.getBackStackEntryAt(it).name == name) return true
+        }
+        return false
+    }
+
+    fun popBackStack(name: String? = null, flag: Int = 0) {
+        fa.supportFragmentManager.popBackStack(name, flag)
+    }
+
+    fun clearBackStack() {
+        fa.supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
     }
 
     enum class ANIMATION(@AnimRes val animRes: Int) {

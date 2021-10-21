@@ -13,10 +13,7 @@ class FragmentUtil(private val fragment: Fragment) {
     private var mDoOnEndEnterAnimation: (() -> Unit)? = null
     private var backPressedBlockCallback: OnBackPressedCallback? = null
     private var terminated = false
-        set(value) {
-            if (value) backPressedBlockCallback?.remove()
-            field = value
-        }
+    private var doOnBackPress: ((() -> Unit) -> Unit)? = null
 
     /** call at onCreateView() */
     fun doOnEndEnterAnimation(l: () -> Unit) {
@@ -25,9 +22,43 @@ class FragmentUtil(private val fragment: Fragment) {
 
     /** call at onCreateView() */
     fun doOnBackPressed(l: (() -> Unit) -> Unit) {
+        doOnBackPress = l
+    }
+
+    /** call at onAttach()
+     *  Use this method using SharedElementTransition
+     *  or Use DoOnBackPressListener
+     * */
+    fun onAttach() {
+        (fragment.sharedElementEnterTransition as TransitionSet?)
+            ?.addListener(object : Transition.TransitionListener {
+                override fun onTransitionStart(transition: Transition) = Unit
+
+                override fun onTransitionEnd(transition: Transition) {
+                    Debug.e("<Transition> ${fragment::class.java.simpleName} [onTransitionEnd]")
+                    if (!terminated) mDoOnEndEnterAnimation?.invoke()
+                    terminated = true
+                }
+
+                override fun onTransitionCancel(transition: Transition) {
+                    Debug.e("<Transition> ${fragment::class.java.simpleName} [onTransitionCancel]")
+                    terminated = true
+                }
+
+                override fun onTransitionPause(transition: Transition) {
+                    Debug.e("<Transition> ${fragment::class.java.simpleName} [onTransitionPause]")
+                    terminated = true
+                }
+
+                override fun onTransitionResume(transition: Transition) = Unit
+            })
+
         val backPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                l.invoke {
+                if (terminated) doOnBackPress?.invoke {
+                    remove()
+                    fragment.requireActivity().onBackPressed()
+                }?: run {
                     remove()
                     fragment.requireActivity().onBackPressed()
                 }
@@ -36,44 +67,6 @@ class FragmentUtil(private val fragment: Fragment) {
         fragment.requireActivity()
             .onBackPressedDispatcher
             .addCallback(fragment, backPressedCallback)
-    }
-
-    /** call at onAttach() */
-    fun blockBackPressWhileTransition() {
-        backPressedBlockCallback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() = Unit
-        }
-        fragment.requireActivity()
-            .onBackPressedDispatcher
-            .addCallback(fragment, backPressedBlockCallback!!)
-    }
-
-    /** call at onAttach()
-     *  Use this method using SharedElementTransition
-     * */
-    fun onAttach() {
-        (fragment.sharedElementEnterTransition as TransitionSet?)
-            ?.addListener(object : Transition.TransitionListener {
-                override fun onTransitionStart(transition: Transition) = Unit
-
-                override fun onTransitionEnd(transition: Transition) {
-                    Debug.e("Transition[onTransitionEnd]")
-                    if (!terminated) mDoOnEndEnterAnimation?.invoke()
-                    terminated = true
-                }
-
-                override fun onTransitionCancel(transition: Transition) {
-                    Debug.e("Transition[onTransitionCancel]")
-                    terminated = true
-                }
-
-                override fun onTransitionPause(transition: Transition) {
-                    Debug.e("Transition[onTransitionPause]")
-                    terminated = true
-                }
-
-                override fun onTransitionResume(transition: Transition) = Unit
-            })
     }
 
     /** call at onCreateAnimation()
@@ -86,6 +79,7 @@ class FragmentUtil(private val fragment: Fragment) {
                 override fun onAnimationStart(animation: Animation?) = Unit
 
                 override fun onAnimationEnd(animation: Animation?) {
+                    Debug.e("onAnimationEnd[enter=$enter]")
                     if (!terminated) {
                         terminated = true
                         if (enter) mDoOnEndEnterAnimation?.invoke()
