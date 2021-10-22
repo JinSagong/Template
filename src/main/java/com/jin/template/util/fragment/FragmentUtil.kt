@@ -71,6 +71,7 @@ class FragmentUtil(private val fragment: Fragment) {
 
     /** call at onCreateAnimation()
      *  Use this method using Transition
+     *  or Use DoOnBackPressListener
      *  */
     fun onCreateAnimation(enter: Boolean, nextAnim: Int): Animation? {
         if (nextAnim != 0x0) {
