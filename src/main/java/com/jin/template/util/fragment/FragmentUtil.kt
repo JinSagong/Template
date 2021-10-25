@@ -57,10 +57,10 @@ class FragmentUtil(private val fragment: Fragment) {
             override fun handleOnBackPressed() {
                 if (terminated) doOnBackPress?.invoke {
                     remove()
-                    fragment.requireActivity().onBackPressed()
-                }?: run {
+                    fragment.requireActivity().supportFragmentManager.popBackStack()
+                } ?: run {
                     remove()
-                    fragment.requireActivity().onBackPressed()
+                    fragment.requireActivity().supportFragmentManager.popBackStack()
                 }
             }
         }
