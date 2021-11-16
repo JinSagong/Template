@@ -62,7 +62,6 @@ class FragmentTransitionUtil(private val fa: FragmentActivity) {
     fun addFragment(
         fragment: Fragment,
         tag: String = fragment::class.java.simpleName,
-        singletonMode: Boolean = false,
         startAndEndRadius: Pair<Int, Int>? = null,
         currentFragment: Fragment? = null
     ) {

@@ -37,6 +37,7 @@ class NavigationDrawer(
             super.onDrawerSlide(drawerView, slideOffset)
             drawerOffsetListener?.invoke(slideOffset)
         }
+
     }
 
     init {

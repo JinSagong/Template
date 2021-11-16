@@ -11,13 +11,13 @@ import com.jin.template.util.Debug
 @Suppress("UNUSED")
 class FragmentUtil(private val fragment: Fragment) {
     private var mDoOnEndEnterAnimation: (() -> Unit)? = null
-    private var backPressedBlockCallback: OnBackPressedCallback? = null
     private var terminated = false
     private var doOnBackPress: ((() -> Unit) -> Unit)? = null
 
     /** call at onCreateView() */
     fun doOnEndEnterAnimation(l: () -> Unit) {
         mDoOnEndEnterAnimation = l
+        if (fragment.sharedElementEnterTransition == null) mDoOnEndEnterAnimation?.invoke()
     }
 
     /** call at onCreateView() */
@@ -51,7 +51,7 @@ class FragmentUtil(private val fragment: Fragment) {
                 }
 
                 override fun onTransitionResume(transition: Transition) = Unit
-            })
+            }) ?: run { terminated = true }
 
         val backPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
