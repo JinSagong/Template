@@ -1,4 +1,4 @@
-package com.jin.template.util.fragment
+package com.jin.template.fragment
 
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils

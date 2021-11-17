@@ -1,4 +1,4 @@
-package com.jin.template.util.fragment
+package com.jin.template.fragment
 
 import android.view.View
 import androidx.annotation.AnimRes
@@ -62,7 +62,6 @@ class FragmentTransitionUtil(private val fa: FragmentActivity) {
     fun addFragment(
         fragment: Fragment,
         tag: String = fragment::class.java.simpleName,
-        startAndEndRadius: Pair<Int, Int>? = null,
         currentFragment: Fragment? = null
     ) {
         val transaction = fa.supportFragmentManager.beginTransaction()
@@ -82,17 +81,11 @@ class FragmentTransitionUtil(private val fa: FragmentActivity) {
                 addTransition(ChangeImageTransform())
                 addTransition(ChangeBounds())
                 addTransition(ChangeTransform())
-                if (startAndEndRadius != null) addTransition(
-                    ChangeOutlineRadiusTransition(startAndEndRadius.first, startAndEndRadius.second)
-                )
             }
             fragment.sharedElementEnterTransition = transitionSet
             fragment.sharedElementReturnTransition = transitionSet
         }
 
-//        val mFragment = fa.supportFragmentManager.findFragmentByTag(tag)
-//        if (singletonMode && mFragment != null) transaction.detach(mFragment)
-//        transaction.add(containerId, fragment, if (singletonMode) tag else null)
         transaction.add(containerId, fragment)
         if (currentFragment != null) transaction.hide(currentFragment)
         if (hasBackStack) transaction.addToBackStack(tag)

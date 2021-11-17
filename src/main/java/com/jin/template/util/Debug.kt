@@ -4,10 +4,12 @@ import android.util.Log
 
 @Suppress("UNUSED")
 object Debug {
-    fun i(msg: String) = Log.i("androidJ", msg)
-    fun e(msg: String) = Log.e("androidJ", msg)
+    var showLog = true
 
-    fun request(msg: String) = Log.d("apiJ", msg)
-    fun response(msg: String) = Log.v("apiJ", msg)
-    fun error(t: Throwable) = Log.e("apiJ", t.message.orEmpty())
+    fun i(msg: String) = if (showLog) Log.i("androidJ", msg) else -1
+    fun e(msg: String) = if (showLog) Log.e("androidJ", msg) else -1
+
+    fun request(msg: String) = if (showLog) Log.d("apiJ", msg) else -1
+    fun response(msg: String) = if (showLog) Log.v("apiJ", msg) else -1
+    fun error(t: Throwable) = if (showLog) Log.e("apiJ", t.message.orEmpty()) else -1
 }

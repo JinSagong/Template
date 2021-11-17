@@ -22,10 +22,10 @@ class LiveData<T> : MutableLiveData<DataLiveValue<T>>() {
         allowNotObservable: Boolean = true,
         observer: (T) -> Unit
     ) {
-        if (doFirst && value != null) observer(value!!.value)
+        if (doFirst && value != null) observer.invoke(value!!.value)
         observe(owner, {
             Debug.i("[Observe] $it")
-            if (value?.observable == true || allowNotObservable) observer(it.value)
+            if (value?.observable == true || allowNotObservable) observer.invoke(it.value)
         })
     }
 

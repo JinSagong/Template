@@ -29,6 +29,7 @@ class FCMSender private constructor(
         private var title: String? = null
         private var content: String? = null
         private var contentResource = -1
+        private var contentResourceName: String? = null
         private var stringExtra1: String? = null
         private var stringExtra2: String? = null
         private var directBootOk = false
@@ -50,6 +51,8 @@ class FCMSender private constructor(
         fun setTitle(title: String?) = apply { this.title = title }
         fun setContent(content: String?) = apply { this.content = content }
         fun setContentResource(resource: Int) = apply { this.contentResource = resource }
+        fun setContentResourceName(resourceName: String) =
+            apply { this.contentResourceName = resourceName }
 
         fun setDirectBoot(directBootOk: Boolean) = apply { this.directBootOk = directBootOk }
 
@@ -74,6 +77,7 @@ class FCMSender private constructor(
                 title?.let { put(FCM_TITLE, it) }
                 content?.let { put(FCM_CONTENT, it) }
                 if (contentResource != -1) put(FCM_CONTENT_RESOURCE, contentResource)
+                contentResourceName?.let { put(FCM_CONTENT_RESOURCE_NAME, it) }
                 stringExtra1?.let { put(FCM_STRING_EXTRA1, it) }
                 stringExtra2?.let { put(FCM_STRING_EXTRA2, it) }
             }
@@ -125,6 +129,7 @@ class FCMSender private constructor(
         const val FCM_TITLE = "title"
         const val FCM_CONTENT = "content"
         const val FCM_CONTENT_RESOURCE = "contentResource"
+        const val FCM_CONTENT_RESOURCE_NAME = "contentResourceName"
 
         const val FCM_STRING_EXTRA1 = "stringExtra1"
         const val FCM_STRING_EXTRA2 = "stringExtra2"
