@@ -6,6 +6,8 @@ import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.transition.Transition
 import androidx.transition.TransitionSet
+import com.jin.template.fragment.FragmentTransitionUtil.Companion.HAS_CUSTOM_ANIMATION
+import com.jin.template.fragment.FragmentTransitionUtil.Companion.HAS_SHARED_ANIMATION
 import com.jin.template.util.Debug
 
 @Suppress("UNUSED")
@@ -14,10 +16,17 @@ class FragmentUtil(private val fragment: Fragment) {
     private var terminated = false
     private var doOnBackPress: ((() -> Unit) -> Unit)? = null
 
+    private val hasCustomAnimation by lazy {
+        fragment.arguments?.getBoolean(HAS_CUSTOM_ANIMATION, false) ?: false
+    }
+    private val hasSharedAnimation by lazy {
+        fragment.arguments?.getBoolean(HAS_SHARED_ANIMATION, false) ?: false
+    }
+
     /** call at onCreateView() */
     fun doOnEndEnterAnimation(l: () -> Unit) {
         mDoOnEndEnterAnimation = l
-        if (fragment.sharedElementEnterTransition == null) mDoOnEndEnterAnimation?.invoke()
+        if (!hasCustomAnimation && !hasSharedAnimation) mDoOnEndEnterAnimation?.invoke()
     }
 
     /** call at onCreateView() */
@@ -51,16 +60,16 @@ class FragmentUtil(private val fragment: Fragment) {
                 }
 
                 override fun onTransitionResume(transition: Transition) = Unit
-            }) ?: run { terminated = true }
+            }) ?: run { if (!hasCustomAnimation) terminated = true }
 
         val backPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 if (terminated) doOnBackPress?.invoke {
                     remove()
-                    fragment.requireActivity().supportFragmentManager.popBackStack()
+                    fragment.requireActivity().onBackPressed()
                 } ?: run {
                     remove()
-                    fragment.requireActivity().supportFragmentManager.popBackStack()
+                    fragment.requireActivity().onBackPressed()
                 }
             }
         }

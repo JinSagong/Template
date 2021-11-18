@@ -16,13 +16,16 @@ import dagger.android.support.DaggerFragment
 abstract class BaseDaggerFragment : DaggerFragment() {
     @get: LayoutRes
     abstract val layoutId: Int
+    lateinit var mView: View
 
     private val fragmentUtil by lazy { FragmentUtil(this) }
-    val transitionUtil by lazy { FragmentTransitionUtil(requireActivity()) }
+    val transitionUtil by lazy { FragmentTransitionUtil(this) }
+
+    private var superOnBackPressed: (() -> Unit)? = null
 
     open fun onCreateView() = Unit
     open fun onEndEnterAnimation() = Unit
-    open fun onBackPressed() = transitionUtil.popBackStack()
+    open fun onBackPressed() = superOnBackPressed?.invoke() ?: Unit
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -44,10 +47,14 @@ abstract class BaseDaggerFragment : DaggerFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View = inflater.inflate(layoutId, container, false).also {
+    ): View = inflater.inflate(layoutId, container, false).also { v ->
         Debug.i("<Lifecycle> ${this::class.java.simpleName} [onCreateView]")
+        mView = v
         fragmentUtil.doOnEndEnterAnimation { onEndEnterAnimation() }
-        fragmentUtil.doOnBackPressed { onBackPressed() }
+        fragmentUtil.doOnBackPressed {
+            superOnBackPressed = it
+            onBackPressed()
+        }
 
         onCreateView()
     }

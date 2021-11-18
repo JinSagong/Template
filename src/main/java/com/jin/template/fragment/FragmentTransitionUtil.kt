@@ -1,5 +1,6 @@
 package com.jin.template.fragment
 
+import android.os.Bundle
 import android.view.View
 import androidx.annotation.AnimRes
 import androidx.annotation.AnimatorRes
@@ -14,7 +15,23 @@ import com.jin.template.R
 import java.util.*
 
 @Suppress("UNUSED")
-class FragmentTransitionUtil(private val fa: FragmentActivity) {
+class FragmentTransitionUtil {
+    private val mActivity: FragmentActivity
+    private val mFragment: Fragment?
+    private val fragmentManager: FragmentManager
+
+    constructor(f: Fragment) {
+        mActivity = f.requireActivity()
+        mFragment = f
+        fragmentManager = f.requireActivity().supportFragmentManager
+    }
+
+    constructor(fa: FragmentActivity) {
+        mActivity = fa
+        mFragment = null
+        fragmentManager = fa.supportFragmentManager
+    }
+
     private var containerId = R.id.fcv_template
     private var hasBackStack = true
     private var enterAnimation = 0
@@ -27,8 +44,8 @@ class FragmentTransitionUtil(private val fa: FragmentActivity) {
 
     fun setBackgroundColor(
         @ColorRes colorId: Int,
-        view: View = fa.findViewById(R.id.cl_template_background)
-    ) = apply { view.setBackgroundColor(ContextCompat.getColor(fa, colorId)) }
+        view: View = mActivity.findViewById(R.id.cl_template_background)
+    ) = apply { view.setBackgroundColor(ContextCompat.getColor(mActivity, colorId)) }
 
     fun setHasBackStack(hasBackStack: Boolean) = apply { this.hasBackStack = hasBackStack }
 
@@ -62,15 +79,18 @@ class FragmentTransitionUtil(private val fa: FragmentActivity) {
     fun addFragment(
         fragment: Fragment,
         tag: String = fragment::class.java.simpleName,
-        currentFragment: Fragment? = null
+        currentFragment: Fragment? = mFragment
     ) {
-        val transaction = fa.supportFragmentManager.beginTransaction()
+        val transaction = fragmentManager.beginTransaction()
         transaction.setReorderingAllowed(true)
 
+        val args = Bundle()
         if (sharedAnimationList.isEmpty()) {
             transaction.setCustomAnimations(
                 enterAnimation, exitAnimation, popEnterAnimation, popExitAnimation
             )
+            if (enterAnimation != 0 || exitAnimation != 0)
+                args.putBoolean(HAS_CUSTOM_ANIMATION, true)
         } else {
             do {
                 val pop = sharedAnimationList.poll()
@@ -84,7 +104,9 @@ class FragmentTransitionUtil(private val fa: FragmentActivity) {
             }
             fragment.sharedElementEnterTransition = transitionSet
             fragment.sharedElementReturnTransition = transitionSet
+            args.putBoolean(HAS_SHARED_ANIMATION, true)
         }
+        fragment.arguments = args
 
         transaction.add(containerId, fragment)
         if (currentFragment != null) transaction.hide(currentFragment)
@@ -101,18 +123,18 @@ class FragmentTransitionUtil(private val fa: FragmentActivity) {
     }
 
     fun checkBackStack(name: String): Boolean {
-        (0 until fa.supportFragmentManager.backStackEntryCount).forEach {
-            if (fa.supportFragmentManager.getBackStackEntryAt(it).name == name) return true
+        (0 until fragmentManager.backStackEntryCount).forEach {
+            if (fragmentManager.getBackStackEntryAt(it).name == name) return true
         }
         return false
     }
 
     fun popBackStack(name: String? = null, flag: Int = 0) {
-        fa.supportFragmentManager.popBackStack(name, flag)
+        fragmentManager.popBackStack(name, flag)
     }
 
     fun clearBackStack() {
-        fa.supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
     }
 
     enum class ANIMATION(@AnimRes val animRes: Int) {
@@ -126,5 +148,10 @@ class FragmentTransitionUtil(private val fa: FragmentActivity) {
         SLIDE_OUT_END(R.anim.slide_out_end),
         SLIDE_IN_BOTTOM(R.anim.slide_in_bottom),
         SLIDE_OUT_BOTTOM(R.anim.slide_out_bottom)
+    }
+
+    companion object {
+        internal const val HAS_CUSTOM_ANIMATION = "hasCustomAnimation"
+        internal const val HAS_SHARED_ANIMATION = "hasSharedAnimation"
     }
 }
