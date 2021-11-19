@@ -6,6 +6,7 @@ import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +16,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.core.view.updateLayoutParams
 import com.jin.template.R
-import kotlinx.android.synthetic.main.layout_top_slide_view.view.*
+import com.jin.template.databinding.LayoutTopSlideViewBinding
 
 @Suppress("UNUSED")
 class TopSlideView : FrameLayout {
@@ -52,13 +53,13 @@ class TopSlideView : FrameLayout {
 
     @SuppressLint("ClickableViewAccessibility")
     private fun init(context: Context, attrs: AttributeSet? = null) {
-        val view = View.inflate(context, R.layout.layout_top_slide_view, null)
-        view.layoutParams = ViewGroup.LayoutParams(-1, -1) // MATCH_PARENT
+        val binding = LayoutTopSlideViewBinding.inflate(LayoutInflater.from(context), this, false)
+        binding.root.layoutParams = ViewGroup.LayoutParams(-1, -1) // MATCH_PARENT
 
-        ivBg = view.iv_top_slide_view_bg
-        flBottom = view.fl_top_slide_view_bottom
-        ivBar = view.iv_top_slide_view_bar
-        flContent = view.fl_top_slide_view_content
+        ivBg = binding.ivTopSlideViewBg
+        flBottom = binding.flTopSlideViewBottom
+        ivBar = binding.ivTopSlideViewBar
+        flContent = binding.flTopSlideViewContent
         flBottom.setOnTouchListener { _, event -> onTouchBar(event) }
 
         if (attrs != null) {
@@ -92,7 +93,7 @@ class TopSlideView : FrameLayout {
             }
         }
 
-        addView(view)
+        addView(binding.root)
     }
 
     interface OnSlide {
