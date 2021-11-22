@@ -1,9 +1,11 @@
 package com.jin.template.di.base
 
 import android.content.Context
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.viewbinding.ViewBinding
+import com.jin.template.util.DayNightUtil
 import com.jin.template.util.LocaleLanguageWrapper
 import dagger.android.support.DaggerAppCompatActivity
 
@@ -12,15 +14,33 @@ abstract class BaseDaggerActivity<B : ViewBinding>(private val bindingFactory: (
     private var _binding: B? = null
     val binding: B get() = _binding!!
 
+    private val dayNightUtil = DayNightUtil()
+    open fun doOnDayMode() = Unit
+    open fun doOnNightMode() = Unit
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = bindingFactory(layoutInflater)
         setContentView(binding.root)
+        dayNightUtil.doOnDayMode(this::doOnDayMode)
+        dayNightUtil.doOnNightMode(this::doOnNightMode)
+        dayNightUtil.setDayNightMode(resources.configuration)
     }
 
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+    }
+
+    /**
+     * should add below code
+     *
+     * AndroidManifest.xml
+     * <activity android:configChanges="uiMode"/>
+     */
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        dayNightUtil.setDayNightMode(newConfig)
     }
 
     override fun attachBaseContext(newBase: Context?) =
