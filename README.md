@@ -15,19 +15,30 @@ buildscript {
         minSdkVersion = 21
         targetSdkVersion = 30
 
-        // App dependencies
+        // Project dependencies
         androidGradlePluginVersion = '4.0.2'
-        appCompatVersion = '1.2.0'
-        constraintLayoutVersion = '2.0.4'
-        daggerVersion = '2.24'
-        firebaseAnalyticsVersion = '18.0.3'
-        firebaseKtxVersion = '19.7.0'
-        googleServicesVersion = '4.3.5'
-        kotlinVersion = '1.4.21'
-        ktxVersion = '1.3.2'
-        materialVersion = '1.4.0-beta01'
+        kotlinPluginVersion = '1.4.21'
+        googleServiceVersion = '4.3.5'
         ossLicensesPluginVersion = '0.10.4'
+
+        // Test
+        junitVersion = '4.12'
+        junitTestVersion = '1.1.3'
+        espressoVersion = '3.4.0'
+
+        // AndroidX
+        appCompatVersion = '1.3.1'
+        coreKtxVersion = '1.6.0'
+        materialVersion = '1.4.0'
+        constraintLayoutVersion = '2.1.2'
+        lifecycleVersion = '2.2.0'
+
+        // Kotlin and Splitties
+        kotlinVersion = '1.5.30'
         splittiesVersion = '2.1.1'
+
+        // Dagger
+        daggerVersion = '2.35.1'
     }
 
     repositories {
@@ -38,8 +49,8 @@ buildscript {
 
     dependencies {
         classpath "com.android.tools.build:gradle:$androidGradlePluginVersion"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
-        classpath "com.google.gms:google-services:$googleServicesVersion"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinPluginVersion"
+        classpath "com.google.gms:google-services:$googleServiceVersion"
         classpath "com.google.android.gms:oss-licenses-plugin:$ossLicensesPluginVersion"
     }
 }
