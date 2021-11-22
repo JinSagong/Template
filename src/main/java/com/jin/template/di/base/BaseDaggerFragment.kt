@@ -6,17 +6,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
-import androidx.annotation.LayoutRes
+import androidx.viewbinding.ViewBinding
 import com.jin.template.fragment.FragmentTransitionUtil
 import com.jin.template.fragment.FragmentUtil
 import com.jin.template.util.Debug
 import dagger.android.support.DaggerFragment
 
 @Suppress("UNUSED")
-abstract class BaseDaggerFragment : DaggerFragment() {
-    @get: LayoutRes
-    abstract val layoutId: Int
-    lateinit var mView: View
+abstract class BaseDaggerFragment<B : ViewBinding>(private val bindingFactory: (LayoutInflater, ViewGroup?, Boolean) -> B) :
+    DaggerFragment() {
+    private var _binding: B? = null
+    val binding get() = _binding!!
 
     private val fragmentUtil by lazy { FragmentUtil(this) }
     val transitionUtil by lazy { FragmentTransitionUtil(this) }
@@ -47,16 +47,18 @@ abstract class BaseDaggerFragment : DaggerFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View = inflater.inflate(layoutId, container, false).also { v ->
+    ): View {
         Debug.i("<Lifecycle> ${this::class.java.simpleName} [onCreateView]")
-        mView = v
+
+        _binding = bindingFactory.invoke(inflater, container, false)
         fragmentUtil.doOnEndEnterAnimation { onEndEnterAnimation() }
         fragmentUtil.doOnBackPressed {
             superOnBackPressed = it
             onBackPressed()
         }
-
         onCreateView()
+
+        return binding.root
     }
 
     override fun onStart() {
@@ -87,6 +89,7 @@ abstract class BaseDaggerFragment : DaggerFragment() {
     override fun onDestroy() {
         super.onDestroy()
         Debug.i("<Lifecycle> ${this::class.java.simpleName} [onDestroy]")
+        _binding = null
     }
 
     override fun onDetach() {
