@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import androidx.viewbinding.ViewBinding
 import com.jin.template.util.DayNightUtil
 import com.jin.template.util.LocaleLanguageWrapper
+import com.jin.template.util.StatusBar
 import dagger.android.support.DaggerAppCompatActivity
 
 abstract class BaseDaggerActivity<B : ViewBinding>(private val bindingFactory: (LayoutInflater) -> B) :
@@ -15,8 +16,8 @@ abstract class BaseDaggerActivity<B : ViewBinding>(private val bindingFactory: (
     val binding: B get() = _binding!!
 
     private val dayNightUtil = DayNightUtil()
-    open fun doOnDayMode() = Unit
-    open fun doOnNightMode() = Unit
+    open fun doOnDayMode() = StatusBar.setWindowLightStatusBar(this, true)
+    open fun doOnNightMode() = StatusBar.setWindowLightStatusBar(this, false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,7 +25,7 @@ abstract class BaseDaggerActivity<B : ViewBinding>(private val bindingFactory: (
         setContentView(binding.root)
         dayNightUtil.doOnDayMode(this::doOnDayMode)
         dayNightUtil.doOnNightMode(this::doOnNightMode)
-        dayNightUtil.setDayNightMode(resources.configuration)
+        binding.root.post { dayNightUtil.setDayNightMode(resources.configuration) }
     }
 
     override fun onDestroy() {

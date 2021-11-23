@@ -27,6 +27,14 @@ object StatusBar {
     }
 
     @Suppress("DEPRECATION")
+    fun setWindowLightStatusBar(act: Activity, enable: Boolean) {
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)  {
+                act.window.decorView.systemUiVisibility =
+                    if (enable) act.window.decorView.systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR else act.window.decorView.systemUiVisibility and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
+            }
+    }
+
+    @Suppress("DEPRECATION")
     fun setTransparentStatusBar(act: Activity) {
         act.window.decorView.systemUiVisibility =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
