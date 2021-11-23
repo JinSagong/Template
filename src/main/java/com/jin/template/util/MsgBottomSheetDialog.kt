@@ -1,7 +1,6 @@
 package com.jin.template.util
 
 import android.content.Context
-import android.view.View
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.jin.template.TemplateController.cancelMsg
@@ -47,7 +46,7 @@ object MsgBottomSheetDialog {
             setContentView(binding.root)
             behavior.skipCollapsed = true
             setOnShowListener { behavior.state = BottomSheetBehavior.STATE_EXPANDED }
-            binding.tvDlgMsg1Description.setOnClickListener { if (autoDismiss) dismiss() }
+            binding.tvDlgMsg1Done.setOnClickListener { if (autoDismiss) dismiss() }
 
             binding.tvDlgMsg1Done.text = confirmMsg
         }
@@ -62,11 +61,15 @@ object MsgBottomSheetDialog {
         fun setDoneText(resId: Int) =
             apply { binding.tvDlgMsg1Done.text = context.getString(resId) }
 
-        fun setOnDoneListener(l: (View) -> Unit) = apply {
+        fun setOnDoneListener(l: () -> Unit) = apply {
             binding.tvDlgMsg1Done.setOnClickListener {
-                l.invoke(it)
+                l.invoke()
                 if (autoDismiss) dismiss()
             }
+        }
+
+        fun setOnCancelListener(l: () -> Unit) = apply {
+            setOnDismissListener { l.invoke() }
         }
     }
 
@@ -99,18 +102,15 @@ object MsgBottomSheetDialog {
         fun setCancelText(resId: Int) =
             apply { binding.tvDlgMsg2Cancel.text = context.getString(resId) }
 
-        fun setOnDoneListener(l: (View) -> Unit) = apply {
+        fun setOnDoneListener(l: () -> Unit) = apply {
             binding.tvDlgMsg2Done.setOnClickListener {
-                l.invoke(it)
+                l.invoke()
                 if (autoDismiss) dismiss()
             }
         }
 
-        fun setOnCancelListener(l: (View) -> Unit) = apply {
-            binding.tvDlgMsg2Done.setOnClickListener {
-                l.invoke(it)
-                dismiss()
-            }
+        fun setOnCancelListener(l: () -> Unit) = apply {
+            setOnDismissListener { l.invoke() }
         }
     }
 }
