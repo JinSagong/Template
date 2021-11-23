@@ -1,7 +1,12 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
-//apply plugin: 'kotlin-parcelize'
+if (rootProject.kotlinPluginVersion >= '1.4.20') {
+    apply plugin: 'kotlin-parcelize'
+    logger.warn("kotlinPluginVersion:" + rootProject.kotlinPluginVersion + " [kotlin-parcelize]")
+} else {
+    apply plugin: 'kotlin-android-extensions'
+    logger.warn("kotlinPluginVersion:" + rootProject.kotlinPluginVersion + " [kotlin-android-extensions]")
+}
 apply plugin: 'kotlin-kapt'
 
 android {
