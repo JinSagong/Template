@@ -64,12 +64,16 @@ class FragmentUtil(private val fragment: Fragment) {
 
         val backPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                if (terminated) doOnBackPress?.invoke {
+                if (terminated && fragment.isVisible) doOnBackPress?.invoke {
                     remove()
-                    fragment.requireActivity().onBackPressed()
+                    if (fragment.requireActivity().supportFragmentManager.backStackEntryCount != 0)
+                        fragment.requireActivity().supportFragmentManager.popBackStack()
+                    else fragment.requireActivity().onBackPressed()
                 } ?: run {
                     remove()
-                    fragment.requireActivity().onBackPressed()
+                    if (fragment.requireActivity().supportFragmentManager.backStackEntryCount != 0)
+                        fragment.requireActivity().supportFragmentManager.popBackStack()
+                    else fragment.requireActivity().onBackPressed()
                 }
             }
         }

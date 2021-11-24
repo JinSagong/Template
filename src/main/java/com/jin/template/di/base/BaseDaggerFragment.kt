@@ -25,7 +25,7 @@ abstract class BaseDaggerFragment<B : ViewBinding>(private val bindingFactory: (
 
     open fun onCreateView() = Unit
     open fun onEndEnterAnimation() = Unit
-    open fun onBackPressed() = superOnBackPressed?.invoke() ?: requireActivity().onBackPressed()
+    open fun onBackPressed() = superOnBackPressed?.invoke() ?: transitionUtil.popBackStack()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
