@@ -34,6 +34,12 @@ class FragmentUtil(private val fragment: Fragment) {
         doOnBackPress = l
     }
 
+    fun onBackPressed() {
+        if (fragment.requireActivity().supportFragmentManager.backStackEntryCount != 0)
+            fragment.requireActivity().supportFragmentManager.popBackStack()
+        else fragment.requireActivity().onBackPressed()
+    }
+
     /** call at onAttach()
      *  Use this method using SharedElementTransition
      *  or Use DoOnBackPressListener
@@ -66,14 +72,10 @@ class FragmentUtil(private val fragment: Fragment) {
             override fun handleOnBackPressed() {
                 if (terminated && fragment.isVisible) doOnBackPress?.invoke {
                     remove()
-                    if (fragment.requireActivity().supportFragmentManager.backStackEntryCount != 0)
-                        fragment.requireActivity().supportFragmentManager.popBackStack()
-                    else fragment.requireActivity().onBackPressed()
+                    onBackPressed()
                 } ?: run {
                     remove()
-                    if (fragment.requireActivity().supportFragmentManager.backStackEntryCount != 0)
-                        fragment.requireActivity().supportFragmentManager.popBackStack()
-                    else fragment.requireActivity().onBackPressed()
+                    onBackPressed()
                 }
             }
         }
