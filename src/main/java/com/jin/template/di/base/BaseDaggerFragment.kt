@@ -1,6 +1,7 @@
 package com.jin.template.di.base
 
 import android.content.Context
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +10,9 @@ import android.view.animation.Animation
 import androidx.viewbinding.ViewBinding
 import com.jin.template.fragment.FragmentTransitionUtil
 import com.jin.template.fragment.FragmentUtil
+import com.jin.template.util.DayNightUtil
 import com.jin.template.util.Debug
+import com.jin.template.util.StatusBar
 import dagger.android.support.DaggerFragment
 
 @Suppress("UNUSED")
@@ -22,6 +25,10 @@ abstract class BaseDaggerFragment<B : ViewBinding>(private val bindingFactory: (
     val transitionUtil by lazy { FragmentTransitionUtil(this) }
 
     private var superOnBackPressed: (() -> Unit)? = null
+
+    private val dayNightUtil = DayNightUtil()
+    open fun doOnDayMode() = Unit
+    open fun doOnNightMode() = Unit
 
     open fun onCreateView() = Unit
     open fun onEndEnterAnimation() = Unit
@@ -56,6 +63,9 @@ abstract class BaseDaggerFragment<B : ViewBinding>(private val bindingFactory: (
             superOnBackPressed = it
             onBackPressed()
         }
+        dayNightUtil.doOnDayMode(this::doOnDayMode)
+        dayNightUtil.doOnNightMode(this::doOnNightMode)
+        binding.root.post { dayNightUtil.setDayNightMode(resources.configuration) }
         onCreateView()
 
         return binding.root
@@ -95,5 +105,10 @@ abstract class BaseDaggerFragment<B : ViewBinding>(private val bindingFactory: (
     override fun onDetach() {
         super.onDetach()
         Debug.i("<Lifecycle> ${this::class.java.simpleName} [onDetach]")
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        dayNightUtil.setDayNightMode(newConfig)
     }
 }

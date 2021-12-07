@@ -22,7 +22,7 @@ object Network {
         var result = false
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Debug.i("[Network] cm.activityNetwork=${cm.activeNetwork}")
+            Debug.i("[Network] cm.activityNetwork=${cm.activeNetwork}") // catch
             val networkCapabilities = cm.activeNetwork ?: return false
             Debug.i("[Network] cm.getNetworkCapabilities=${cm.getNetworkCapabilities(networkCapabilities)}")
             val actNw = cm.getNetworkCapabilities(networkCapabilities) ?: return false
