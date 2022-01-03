@@ -44,7 +44,7 @@ class FragmentTransitionUtil {
 
     fun setBackgroundColor(
         @ColorRes colorId: Int,
-        view: View = mActivity.findViewById(R.id.cl_template_background)
+        view: View = mActivity.findViewById(containerId)
     ) = apply { view.setBackgroundColor(ContextCompat.getColor(mActivity, colorId)) }
 
     fun setHasBackStack(hasBackStack: Boolean) = apply { this.hasBackStack = hasBackStack }
