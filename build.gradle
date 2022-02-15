@@ -52,6 +52,7 @@ dependencies {
     implementation "com.google.android.material:material:$rootProject.materialVersion"
     implementation "androidx.constraintlayout:constraintlayout:$rootProject.constraintLayoutVersion"
     implementation "androidx.lifecycle:lifecycle-extensions:$rootProject.lifecycleVersion"
+//    implementation "androidx.fragment:fragment-ktx:1.4.1"
 
     // Kotlin and Splitties
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$rootProject.kotlinVersion"

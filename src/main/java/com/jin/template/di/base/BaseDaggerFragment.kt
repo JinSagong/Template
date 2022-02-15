@@ -94,12 +94,12 @@ abstract class BaseDaggerFragment<B : ViewBinding>(private val bindingFactory: (
     override fun onDestroyView() {
         super.onDestroyView()
         Debug.i("<Lifecycle> ${this::class.java.simpleName} [onDestroyView]")
+        _binding = null
     }
 
     override fun onDestroy() {
         super.onDestroy()
         Debug.i("<Lifecycle> ${this::class.java.simpleName} [onDestroy]")
-        _binding = null
     }
 
     override fun onDetach() {
