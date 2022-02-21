@@ -27,7 +27,7 @@ object Toasty {
         Debug.e("Toasty error: ${e.message}")
     }
 
-    fun showAlert(@StringRes msgId: Int) {
+    fun showAlert(@StringRes msgId: Int) = try {
         val msg = appContext.createConfigurationContext(
             Configuration(
                 appContext.resources.configuration.apply { setLocale(Locale(defaultLanguage)) }
@@ -36,15 +36,19 @@ object Toasty {
         toast?.cancel()
         toast = alertToast(msg)
         toast!!.show()
+    } catch (e: Exception) {
+        Debug.e("Toasty error: ${e.message}")
     }
 
-    fun showAlert(msg: String) {
+    fun showAlert(msg: String) = try  {
         toast?.cancel()
         toast = alertToast(msg)
         toast!!.show()
+    } catch (e: Exception) {
+        Debug.e("Toasty error: ${e.message}")
     }
 
-    fun show(@StringRes msgId: Int) {
+    fun show(@StringRes msgId: Int) = try  {
         val msg = appContext.createConfigurationContext(
             Configuration(
                 appContext.resources.configuration.apply { setLocale(Locale(defaultLanguage)) }
@@ -53,11 +57,15 @@ object Toasty {
         toast?.cancel()
         toast = messageToast(msg)
         toast!!.show()
+    } catch (e: Exception) {
+        Debug.e("Toasty error: ${e.message}")
     }
 
-    fun show(msg: String) {
+    fun show(msg: String) = try  {
         toast?.cancel()
         toast = messageToast(msg)
         toast!!.show()
+    } catch (e: Exception) {
+        Debug.e("Toasty error: ${e.message}")
     }
 }
