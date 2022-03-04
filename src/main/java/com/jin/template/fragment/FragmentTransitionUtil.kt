@@ -122,8 +122,9 @@ class FragmentTransitionUtil {
         sharedAnimationList.clear()
     }
 
-    fun checkBackStack(name: String): Boolean {
-        (0 until fragmentManager.backStackEntryCount).forEach {
+    fun checkBackStack(name: String? = null): Boolean {
+        if (name == null) return fragmentManager.backStackEntryCount != 0
+        else (0 until fragmentManager.backStackEntryCount).forEach {
             if (fragmentManager.getBackStackEntryAt(it).name == name) return true
         }
         return false
