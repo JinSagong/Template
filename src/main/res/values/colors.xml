@@ -10,9 +10,11 @@
     <!-- Default Color -->
     <color name="TRANSPARENT">#00ffffff</color>
     <color name="WHITE">#ffffff</color>
+    <color name="WHITE95">#f2ffffff</color>
     <color name="WHITE90">#e6ffffff</color>
     <color name="WHITE50">#80ffffff</color>
     <color name="BLACK">#000000</color>
+    <color name="BLACK95">#f2000000</color>
     <color name="BLACK90">#e6000000</color>
     <color name="BLACK50">#80000000</color>
     <color name="RED">#ff6961</color>
