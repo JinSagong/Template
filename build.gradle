@@ -65,8 +65,8 @@ dependencies {
     kapt "com.google.dagger:dagger-android-processor:$rootProject.daggerVersion"
 
     // Ted
-    implementation 'gun0912.ted:tedpermission:2.2.2'
-    implementation 'gun0912.ted:tedonactivityresult:1.0.6'
+    implementation 'io.github.ParkSangGwon:tedpermission-normal:3.3.0'
+    implementation 'io.github.ParkSangGwon:tedonactivityresult:1.0.10'
 
     // Styleable Toast
     implementation 'com.muddzdev:styleabletoast:2.2.3'

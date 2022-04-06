@@ -2,14 +2,14 @@ package com.jin.template.util
 
 import android.content.Context
 import com.gun0912.tedpermission.PermissionListener
-import com.gun0912.tedpermission.TedPermission
+import com.gun0912.tedpermission.normal.TedPermission
 
 @Suppress("UNUSED")
 object PermissionDialog {
     fun with(context: Context) = PermissionDialog(context)
 
     class PermissionDialog(context: Context) {
-        private val tedPermission = TedPermission.with(context)
+        private val tedPermission = TedPermission.create()
         private var grantedListener: (() -> Unit)? = null
         private var deniedListener: (() -> Unit)? = null
 
