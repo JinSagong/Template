@@ -19,37 +19,38 @@ object Network {
 
     @Suppress("DEPRECATION")
     private fun check(): Boolean {
-        var result = false
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Debug.i("[Network] cm.activityNetwork=${cm.activeNetwork}") // catch
-            val networkCapabilities = cm.activeNetwork ?: return false
-            Debug.i("[Network] cm.getNetworkCapabilities=${cm.getNetworkCapabilities(networkCapabilities)}")
-            val actNw = cm.getNetworkCapabilities(networkCapabilities) ?: return false
-            Debug.i("[Network] TRANSPORT_WIFI=${actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)}")
-            Debug.i("[Network] TRANSPORT_CELLULAR=${actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)}")
-            Debug.i("[Network] TRANSPORT_ETHERNET=${actNw.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)}")
+        Debug.i("[Network] cm.activityNetwork=${cm.activeNetwork}") // catch
+        val networkCapabilities = cm.activeNetwork ?: return false
+        Debug.i(
+            "[Network] cm.getNetworkCapabilities=${cm.getNetworkCapabilities(networkCapabilities)}"
+        )
+        val actNw = cm.getNetworkCapabilities(networkCapabilities) ?: return false
+        Debug.i("[Network] TRANSPORT_WIFI=${actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)}")
+        Debug.i("[Network] TRANSPORT_CELLULAR=${actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)}")
+        Debug.i("[Network] TRANSPORT_ETHERNET=${actNw.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)}")
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
             Debug.i("[Network] TRANSPORT_WIFI_AWARE=${actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI_AWARE)}")
-            Debug.i("[Network] TRANSPORT_VPN=${actNw.hasTransport(NetworkCapabilities.TRANSPORT_VPN)}")
+        Debug.i("[Network] TRANSPORT_VPN=${actNw.hasTransport(NetworkCapabilities.TRANSPORT_VPN)}")
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1)
             Debug.i("[Network] TRANSPORT_LOWPAN=${actNw.hasTransport(NetworkCapabilities.TRANSPORT_LOWPAN)}")
-            Debug.i("[Network] TRANSPORT_BLUETOOTH=${actNw.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH)}")
-            result = when {
-                actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
-                actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
-                actNw.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
-                else -> false
-            }
-        } else {
-            cm.activeNetworkInfo?.run {
-                result = when (type) {
-                    ConnectivityManager.TYPE_WIFI -> true
-                    ConnectivityManager.TYPE_MOBILE -> true
-                    ConnectivityManager.TYPE_ETHERNET -> true
-                    else -> false
-                }
-            }
+        Debug.i("[Network] TRANSPORT_BLUETOOTH=${actNw.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH)}")
+        return when {
+            actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+            actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+            actNw.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+            else -> false
         }
+    }
 
-        return result
+    fun getUploadKbps(): Int {
+        val networkCapabilities = cm.activeNetwork ?: return 0
+        val actNw = cm.getNetworkCapabilities(networkCapabilities) ?: return 0
+        return actNw.linkUpstreamBandwidthKbps / 100
+    }
+
+    fun getDownloadKbps(): Int {
+        val networkCapabilities = cm.activeNetwork ?: return 0
+        val actNw = cm.getNetworkCapabilities(networkCapabilities) ?: return 0
+        return actNw.linkDownstreamBandwidthKbps / 100
     }
 }
