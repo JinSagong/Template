@@ -1,5 +1,6 @@
 package com.jin.template.fcm
 
+import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -13,6 +14,7 @@ import androidx.annotation.RawRes
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import io.karn.notify.Notify
+import kotlin.random.Random
 
 @Suppress("UNUSED")
 class Notify private constructor(private val context: Context, private val channel: String) {
@@ -43,9 +45,11 @@ class Notify private constructor(private val context: Context, private val chann
     fun setTitle(title: String) = apply { notificationBuilder.setContentTitle(title) }
     fun setContent(content: String) = apply { notificationBuilder.setContentText(content) }
 
+    @SuppressLint("UnspecifiedImmutableFlag")
     fun setFullScreenIntent(intent: Intent) = apply {
         notificationBuilder.setFullScreenIntent(
-            PendingIntent.getActivity(context, 0, intent, 0), priorityHigh
+            PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT),
+            priorityHigh
         )
     }
 
@@ -101,12 +105,16 @@ class Notify private constructor(private val context: Context, private val chann
                 Uri.parse("android.resource://${context.applicationContext.packageName}/$sound")
         }
 
+        @SuppressLint("UnspecifiedImmutableFlag")
         fun build() {
             if (mChannel.isEmpty() || mTitle.isEmpty() || mContent.isEmpty()) return
             Notify.with(context)
                 .meta {
                     if (mClickIntent != null) clickIntent = PendingIntent.getActivity(
-                        context, 0, mClickIntent, PendingIntent.FLAG_UPDATE_CURRENT
+                        context,
+                        Random.nextInt(10000),
+                        mClickIntent,
+                        PendingIntent.FLAG_UPDATE_CURRENT
                     )
                 }
                 .alerting(mChannel) {

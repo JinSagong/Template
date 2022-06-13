@@ -12,7 +12,6 @@ import com.jin.template.fragment.FragmentTransitionUtil
 import com.jin.template.fragment.FragmentUtil
 import com.jin.template.util.DayNightUtil
 import com.jin.template.util.Debug
-import com.jin.template.util.StatusBar
 import dagger.android.support.DaggerFragment
 
 @Suppress("UNUSED")
