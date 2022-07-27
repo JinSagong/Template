@@ -33,10 +33,14 @@ abstract class BaseAdapter<T> : RecyclerView.Adapter<BaseAdapter<T>.BaseViewHold
         notifyDataSetChanged()
     }
 
-    fun updateAddItem(item: T, type: Int = defaultViewType) {
-        itemList.add(Pair(item, type))
-        notifyItemInserted(itemCount)
-        notifyItemRangeInserted(itemCount, 1)
+    fun updateAddItem(item: T, type: Int = defaultViewType, idx: Int = -1) {
+        if (idx == -1) {
+            itemList.add(Pair(item, type))
+            notifyItemInserted(itemCount)
+        } else {
+            itemList.add(idx, Pair(item, type))
+            notifyItemInserted(idx)
+        }
     }
 
     fun updateAddList(list: List<T>) = updateAddListWithSingleViewType(list, defaultViewType)
