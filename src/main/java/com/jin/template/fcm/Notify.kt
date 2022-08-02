@@ -74,6 +74,8 @@ class Notify private constructor(private val context: Context, private val chann
         fun with(context: Context, channel: String) = Notify(context, channel)
         fun delete(context: Context, channel: String, notificationId: Int) =
             Notify(context, channel).delete(notificationId)
+
+        fun cancel(notificationId: Int) = Notify.cancelNotification(notificationId)
     }
 
     class Builder(private val context: Context) {
@@ -106,7 +108,7 @@ class Notify private constructor(private val context: Context, private val chann
         }
 
         @SuppressLint("UnspecifiedImmutableFlag")
-        fun build() {
+        fun build(notificationId: Int? = null) {
             if (mChannel.isEmpty() || mTitle.isEmpty() || mContent.isEmpty()) return
             Notify.with(context)
                 .meta {
@@ -131,7 +133,7 @@ class Notify private constructor(private val context: Context, private val chann
                     title = mTitle
                     text = mContent
                 }
-                .show()
+                .show(notificationId)
         }
     }
 }

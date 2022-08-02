@@ -1,6 +1,7 @@
 package com.jin.template.util
 
 import androidx.core.widget.NestedScrollView
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 @Suppress("UNUSED")
@@ -44,6 +45,8 @@ class Paging<T> private constructor(
     }
 
     private fun initRecyclerView() {
+        val isReversed =
+            (recyclerView?.layoutManager as? LinearLayoutManager)?.reverseLayout ?: false
         onLoadListener?.invoke(page, capacity) {
             if (page == 1) {
                 adapter?.clear()
@@ -56,8 +59,8 @@ class Paging<T> private constructor(
                 adapter?.updateAddListWithSingleViewType(it, viewType)
                 page++
                 recyclerView?.post {
-                    if (recyclerView.canScrollHorizontally(1) ||
-                        recyclerView.canScrollVertically(1)
+                    if (recyclerView.canScrollHorizontally(if (isReversed) -1 else 1) ||
+                        recyclerView.canScrollVertically(if (isReversed) -1 else 1)
                     ) {
                         recyclerView.addOnScrollListener(recyclerViewListener)
                     } else {
@@ -79,8 +82,8 @@ class Paging<T> private constructor(
                 adapter?.updateAddListWithViewType(it)
                 page++
                 recyclerView?.post {
-                    if (recyclerView.canScrollHorizontally(1) ||
-                        recyclerView.canScrollVertically(1)
+                    if (recyclerView.canScrollHorizontally(if (isReversed) -1 else 1) ||
+                        recyclerView.canScrollVertically(if (isReversed) -1 else 1)
                     ) {
                         recyclerView.addOnScrollListener(recyclerViewListener)
                     } else {
@@ -145,8 +148,10 @@ class Paging<T> private constructor(
         object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                if ((dx != 0 && !recyclerView.canScrollHorizontally(1)) ||
-                    (dy != 0 && !recyclerView.canScrollVertically(1))
+                val isReversed =
+                    (recyclerView.layoutManager as? LinearLayoutManager)?.reverseLayout ?: false
+                if ((dx != 0 && !recyclerView.canScrollHorizontally(if (isReversed) -1 else 1)) ||
+                    (dy != 0 && !recyclerView.canScrollVertically(if (isReversed) -1 else 1))
                 ) {
                     if (pageWorking < page) {
                         pageWorking = page
