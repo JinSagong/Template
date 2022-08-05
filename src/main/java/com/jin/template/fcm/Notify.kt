@@ -13,6 +13,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.RawRes
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
+import com.jin.template.util.Debug
 import io.karn.notify.Notify
 import kotlin.random.Random
 
@@ -75,7 +76,11 @@ class Notify private constructor(private val context: Context, private val chann
         fun delete(context: Context, channel: String, notificationId: Int) =
             Notify(context, channel).delete(notificationId)
 
-        fun cancel(notificationId: Int) = Notify.cancelNotification(notificationId)
+        fun cancel(notificationId: Int) = try {
+            Notify.cancelNotification(notificationId)
+        } catch (e: Exception) {
+            Debug.e(e.message.toString())
+        }
     }
 
     class Builder(private val context: Context) {
