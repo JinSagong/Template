@@ -49,7 +49,7 @@ class Notify private constructor(private val context: Context, private val chann
     @SuppressLint("UnspecifiedImmutableFlag")
     fun setFullScreenIntent(intent: Intent) = apply {
         notificationBuilder.setFullScreenIntent(
-            PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT),
+            PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE),
             priorityHigh
         )
     }
@@ -121,7 +121,7 @@ class Notify private constructor(private val context: Context, private val chann
                         context,
                         Random.nextInt(10000),
                         mClickIntent,
-                        PendingIntent.FLAG_UPDATE_CURRENT
+                        PendingIntent.FLAG_IMMUTABLE
                     )
                 }
                 .alerting(mChannel) {
