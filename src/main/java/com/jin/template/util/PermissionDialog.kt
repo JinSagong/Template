@@ -9,32 +9,35 @@ object PermissionDialog {
     fun with(context: Context) = PermissionDialog(context)
 
     class PermissionDialog(context: Context) {
-        private val tedPermission = TedPermission.create()
+        private var permissions: Array<out String>? = null
         private var grantedListener: (() -> Unit)? = null
         private var deniedListener: (() -> Unit)? = null
 
         fun setPermission(vararg permissions: Array<String>) = apply {
-            tedPermission.setPermissions(*permissions.flatMap { it.toList() }.toTypedArray())
+            this.permissions = permissions.flatMap { it.toList() }.toTypedArray()
         }
 
         fun setPermission(vararg permissions: String) = apply {
-            tedPermission.setPermissions(*permissions)
+            this.permissions = permissions
         }
 
         fun doOnGranted(callback: () -> Unit) = apply { grantedListener = callback }
         fun doOnDenied(callback: () -> Unit) = apply { deniedListener = callback }
 
         fun check() {
-            tedPermission.setPermissionListener(object : PermissionListener {
-                override fun onPermissionGranted() {
-                    grantedListener?.invoke()
-                }
+            TedPermission.create()
+                .setPermissionListener(object : PermissionListener {
+                    override fun onPermissionGranted() {
+                        grantedListener?.invoke()
+                    }
 
-                override fun onPermissionDenied(deniedPermissions: MutableList<String>?) {
-                    Debug.e("[Permission Denied] permission=${deniedPermissions.toString()}")
-                    deniedListener?.invoke()
-                }
-            }).check()
+                    override fun onPermissionDenied(deniedPermissions: MutableList<String>?) {
+                        Debug.e("[Permission Denied] permission=${deniedPermissions.toString()}")
+                        deniedListener?.invoke()
+                    }
+                })
+                .apply { if (permissions != null) setPermissions(*permissions!!) }
+                .check()
         }
     }
 }
