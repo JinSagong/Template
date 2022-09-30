@@ -11,6 +11,7 @@ object TemplateController {
     lateinit var offlineMsg: String
     lateinit var confirmMsg: String
     lateinit var cancelMsg: String
+    lateinit var fcmProjectId: String
     lateinit var fcmKey: String
 
     fun setApplication(app: Application) = apply { appContext = app.applicationContext }
@@ -21,6 +22,7 @@ object TemplateController {
     fun setConfirmMsg(@StringRes msgId: Int) = apply { confirmMsg = appContext.getString(msgId) }
     fun setCancelMsg(msg: String) = apply { cancelMsg = msg }
     fun setCancelMsg(@StringRes msgId: Int) = apply { cancelMsg = appContext.getString(msgId) }
+    fun setFcmProjectId(id: String) = apply { fcmProjectId = id }
     fun setFcmKey(key: String) = apply { fcmKey = key }
     fun setDefaultFont(staticTypefaceFieldName: String, fontAssetName: String) = apply {
         val regular = Typeface.createFromAsset(appContext.assets, fontAssetName)
