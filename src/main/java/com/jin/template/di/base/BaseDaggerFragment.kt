@@ -64,7 +64,7 @@ abstract class BaseDaggerFragment<B : ViewBinding>(private val bindingFactory: (
         }
         dayNightUtil.doOnDayMode(this::doOnDayMode)
         dayNightUtil.doOnNightMode(this::doOnNightMode)
-        binding.root.post { dayNightUtil.setDayNightMode(resources.configuration) }
+        binding.root.post { if (context != null) dayNightUtil.setDayNightMode(resources.configuration) }
         onCreateView()
 
         return binding.root

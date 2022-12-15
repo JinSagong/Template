@@ -14,11 +14,11 @@ class IntegerPreference(
 ) : ReadWriteProperty<Any, Int?> {
 
     @WorkerThread
-    override fun getValue(thisRef: Any, property: KProperty<*>): Int? {
+    override fun getValue(thisRef: Any, property: KProperty<*>): Int {
         return preferences.value.getInt(name, defaultValue)
     }
 
     override fun setValue(thisRef: Any, property: KProperty<*>, value: Int?) {
-        preferences.value.edit { putInt(name, value?:defaultValue) }
+        preferences.value.edit { putInt(name, value ?: defaultValue) }
     }
 }

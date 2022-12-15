@@ -14,11 +14,11 @@ class FloatPreference(
 ) : ReadWriteProperty<Any, Float?> {
 
     @WorkerThread
-    override fun getValue(thisRef: Any, property: KProperty<*>): Float? {
+    override fun getValue(thisRef: Any, property: KProperty<*>): Float {
         return preferences.value.getFloat(name, defaultValue)
     }
 
     override fun setValue(thisRef: Any, property: KProperty<*>, value: Float?) {
-        preferences.value.edit { putFloat(name, value?:defaultValue) }
+        preferences.value.edit { putFloat(name, value ?: defaultValue) }
     }
 }
