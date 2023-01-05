@@ -40,7 +40,7 @@
         <item name="stTextSize">14dp</item>
         <item name="stColorBackground">@color/toast_background</item>
         <item name="stSolidBackground">true</item>
-        <item name="stStrokeWidth">3dp</item>
+        <item name="stStrokeWidth">2dp</item>
         <item name="stStrokeColor">@color/toast_error</item>
         <item name="stIconStart">@drawable/png_error</item>
         <item name="stLength">LONG</item>
@@ -56,7 +56,7 @@
         <item name="stTextSize">14dp</item>
         <item name="stColorBackground">@color/toast_background</item>
         <item name="stSolidBackground">true</item>
-        <item name="stStrokeWidth">3dp</item>
+        <item name="stStrokeWidth">2dp</item>
         <item name="stStrokeColor">@color/toast_message</item>
         <item name="stLength">LONG</item>
         LONG or SHORT
